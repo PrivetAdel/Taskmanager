@@ -35,7 +35,7 @@ export const humanizeTaskDueDate = (dueDate) => {
 export const render = (container, element, place = `beforeend`) => {
   switch (place) {
     case `afterbegin`:
-      container.pretend(element);
+      container.prepend(element);
       break;
     case `beforeend`:
       container.append(element);
