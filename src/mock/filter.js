@@ -1,4 +1,4 @@
-import {isTaskExpired, isTaskRepeating, isTaskExpiringToday} from '../utils';
+import {isTaskExpired, isTaskRepeating, isTaskExpiringToday} from '../utils/task';
 
 const taskToFilterMap = {
   all: (tasks) => tasks.filter((task) => !task.isArchive).length,
