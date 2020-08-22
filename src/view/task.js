@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from '../utils/task';
+import {isTaskExpired, isTaskRepeating, formatTaskDueDate} from '../utils/task';
 
 export default class Task extends AbstractView {
   constructor(task) {
@@ -13,8 +13,7 @@ export default class Task extends AbstractView {
   _createTaskTemplate(task) {
     const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
-    const date = dueDate !== null
-      ? humanizeTaskDueDate(dueDate) : ``;
+    const date = formatTaskDueDate(dueDate);
 
     const deadlineClassName = isTaskExpired(dueDate)
       ? `card--deadline` : ``;
