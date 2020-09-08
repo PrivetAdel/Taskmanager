@@ -9,6 +9,12 @@ const Mode = {
   EDITING: `EDITING`
 };
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
 export default class Task {
   constructor(boardTasksComponent, changeData, changeMode) {
     this._boardTasksComponent = boardTasksComponent;
@@ -52,7 +58,8 @@ export default class Task {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._taskEditComponent, prevTaskEditComponent);
+      replace(this._taskComponent, prevTaskEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevTaskComponent);
@@ -68,6 +75,35 @@ export default class Task {
   destroy() {
     remove(this._taskComponent);
     remove(this._taskEditComponent);
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._taskEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._taskEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._taskEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.ABORTING:
+        this._taskEditComponent.shake(resetFormState);
+        this._taskComponent.shake(resetFormState);
+        break;
+    }
   }
 
   _replaceCardToForm() {
@@ -131,8 +167,6 @@ export default class Task {
         isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
         update
     );
-
-    this._replaceFormToCard();
   }
 
   _handleDeleteClick(task) {
