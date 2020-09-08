@@ -1,7 +1,6 @@
 import TaskEditView from '../view/task-edit';
 import {render, remove} from '../utils/render';
 import {UserAction, UpdateType} from '../const';
-import {generateId} from '../utils/task';
 
 export default class TaskNew {
   constructor(boardTasksComponent, changeData) {
@@ -47,13 +46,31 @@ export default class TaskNew {
     document.removeEventListener(`keydown`, this._escDownHandler);
   }
 
+  setSaving() {
+    this._taskEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._taskEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._taskEditComponent.shake(resetFormState);
+  }
+
   _handleFormSubmit(task) {
     this._changeData(
         UserAction.ADD_TASK,
         UpdateType.MINOR,
-        Object.assign({id: generateId()}, task)
+        task
     );
-    this.destroy();
   }
 
   _handleDeleteClick() {
